@@ -1,0 +1,42 @@
+<project name="KobeeDemoProject" default="build" basedir=".">
+
+    <!-- Define workspace properties -->
+    <property name="src.dir" value="src"/>
+    <property name="build.dir" value="build"/>
+    
+    <!-- Mimic environment properties normally supplied by Kobee parameters -->
+    <property name="kobee.build.number" value="42"/>
+    <property name="kobee.build.date" value="2026-10-22"/>
+
+    <!-- 1. Clean the workspace -->
+    <target name="clean">
+        <echo message="[Kobee Clean Phase] Removing old build directories..."/>
+        <delete dir="${build.dir}"/>
+    </target>
+
+    <!-- 2. Initialize new build layout -->
+    <target name="init" depends="clean">
+        <echo message="[Kobee Init Phase] Preparing build environment..."/>
+        <mkdir dir="${build.dir}"/>
+    </target>
+
+    <!-- 3. Build & Mimic Text Changes -->
+    <target name="build" depends="init">
+        <echo message="[Kobee Build Phase] Copying files and injecting build tokens..."/>
+        
+        <!-- Copy file from src to build while replacing template text tokens -->
+        <copy todir="${build.dir}">
+            <fileset dir="${src.dir}"/>
+            <filterset>
+                <filter token="BUILD_NUM" value="${kobee.build.number}"/>
+                <filter token="DATE" value="${kobee.build.date}"/>
+            </filterset>
+        </copy>
+
+        <!-- Extra text mimic: Modifying the file context directly -->
+        <replace file="${build.dir}/app-config.txt" token="BUILD_STATUS=PRE-BUILD" value="BUILD_STATUS=SUCCESSFUL_KOBEE_BUILD"/>
+        
+        <echo message="[Kobee Success] Text replacement complete. Result saved to ${build.dir}/app-config.txt"/>
+    </target>
+
+</project>
